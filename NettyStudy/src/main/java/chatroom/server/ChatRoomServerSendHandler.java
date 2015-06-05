@@ -1,4 +1,4 @@
-package chatroom;
+package chatroom.server;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;

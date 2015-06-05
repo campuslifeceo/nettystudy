@@ -1,8 +1,9 @@
-package chatroom;
+package chatroom.server;
   
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -32,7 +33,9 @@ public class ChatRoomServer {
 					ch.pipeline().addLast(new ChatRoomServerRecvHandler());
 					ch.pipeline().addLast(new ChatRoomServerSendHandler());
 				}
-			});
+			})
+			.option(ChannelOption.SO_BACKLOG, 128)
+			.childOption(ChannelOption.SO_KEEPALIVE, true);
 			
 			ChannelFuture f = b.bind(port).sync();
 			f.channel().closeFuture().sync();
