@@ -35,9 +35,9 @@ public class ChatRoomClient {
 			workerGroup.shutdownGracefully();
 		}
 	}
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		// TODO Auto-generated method stub
-
+		new ChatRoomClient().client("localhost", 8080);
 	}
 
 }
