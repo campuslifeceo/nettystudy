@@ -1,6 +1,6 @@
 package chatroom.client;
 
-import java.util.Date;
+
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -12,8 +12,8 @@ public class ChatRoomClientHandler extends ChannelInboundHandlerAdapter{
 		ByteBuf m = (ByteBuf) msg;
 		
 		try{
-			long currentTimeMillis = (m.readUnsignedInt() - 2208988800L) * 1000L;
-			System.out.println(new Date(currentTimeMillis));
+			
+			System.out.println(m.toString());
 			ctx.close();
 		}finally{
 			m.release();

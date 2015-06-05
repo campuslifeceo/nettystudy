@@ -30,6 +30,7 @@ public class ChatRoomServer {
 			.childHandler(new ChannelInitializer<SocketChannel>() {
 				@Override
 				public void initChannel(SocketChannel ch){
+					ch.pipeline().addLast(new MessageDecoder());
 					ch.pipeline().addLast(new ChatRoomServerRecvHandler());
 					ch.pipeline().addLast(new ChatRoomServerSendHandler());
 				}
