@@ -1,5 +1,5 @@
 package chatroom;
-
+  
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -29,7 +29,8 @@ public class ChatRoomServer {
 			.childHandler(new ChannelInitializer<SocketChannel>() {
 				@Override
 				public void initChannel(SocketChannel ch){
-					ch.pipeline().addLast(new ChatRoomServerHandler());
+					ch.pipeline().addLast(new ChatRoomServerRecvHandler());
+					ch.pipeline().addLast(new ChatRoomServerSendHandler());
 				}
 			});
 			

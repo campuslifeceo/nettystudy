@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.CharsetUtil;
 
-public class ChatRoomServerHandler extends ChannelInboundHandlerAdapter{
+public class ChatRoomServerRecvHandler extends ChannelInboundHandlerAdapter{
 	
 	@Override 
 	public void channelRead(ChannelHandlerContext ctx, Object msg){
@@ -20,5 +20,11 @@ public class ChatRoomServerHandler extends ChannelInboundHandlerAdapter{
 		ctx.write(msg);
 		ctx.flush();
 		
+	}
+	
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause){
+		cause.printStackTrace();
+		ctx.close();
 	}
 }
