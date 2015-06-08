@@ -19,12 +19,13 @@ public class TelnetServerHandler extends SimpleChannelInboundHandler<String> {
  
         ctx.write("It is " + new Date() + " now.\r\n");
         ctx.flush();
-
+        //ctx.fireChannelActive();
     }
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String request) throws Exception {
         // Generate and write a response.
+    	
         String response;
         boolean close = false;
         if (request.isEmpty()) {
@@ -33,7 +34,12 @@ public class TelnetServerHandler extends SimpleChannelInboundHandler<String> {
             response = "Have a good day!\r\n";
             close = true;
         } else {
-            response = "Did you say '" + request + "'?\r\n";
+            response = "Did you say '" + request + "'?\r\n" ;
+            String channelName = "ChannelName: "+ctx.channel().getClass().getName() + "\r\n";
+            String channelHandlerName = "ChannelHandlerName: "+ ctx.handler().getClass().getName() +"\r\n";
+            String channelPipelineName = "ChannelPipelineName: " + ctx.pipeline().getClass().getName() + "\r\n";
+           
+            response = response + channelName+channelHandlerName + channelPipelineName;
         }
 
         // We do not need to write a ChannelBuffer here.
@@ -45,11 +51,14 @@ public class TelnetServerHandler extends SimpleChannelInboundHandler<String> {
         if (close) {
             future.addListener(ChannelFutureListener.CLOSE);
         }
+        
+        
     }
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
         ctx.flush();
+       // ctx.fireChannelReadComplete();
     }
 
     @Override
