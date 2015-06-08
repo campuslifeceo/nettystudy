@@ -1,5 +1,7 @@
 package chatroom.server;
 
+import java.util.HashSet;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -9,9 +11,11 @@ import io.netty.util.CharsetUtil;
 
 public class ChatRoomServerRecvHandler extends ChannelInboundHandlerAdapter{
 	
+	
+	
 	@Override 
 	public void channelRead(ChannelHandlerContext ctx, Object msg){
-		System.out.println("From client: " + msg);
+		System.out.println("Client " + ctx.channel().remoteAddress().toString() + " :" + msg);
 		
 	}
 	
@@ -24,7 +28,9 @@ public class ChatRoomServerRecvHandler extends ChannelInboundHandlerAdapter{
 	
 	@Override
 	public void channelActive(final ChannelHandlerContext ctx){
-		String welcome = "hello, how are you?\r\n";
+		
+		String welcome = "hello, " + ctx.channel().remoteAddress().toString() + "\r\n";
+		
 		ctx.writeAndFlush(welcome);
 	}
 }
