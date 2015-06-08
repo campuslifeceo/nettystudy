@@ -1,6 +1,11 @@
 package chatroom.server;
   
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -18,7 +23,7 @@ public class ChatRoomServer {
 	}
 	
 	
-	public void serve() throws InterruptedException{
+	public void serve() throws InterruptedException, IOException{
 		EventLoopGroup bossGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		
@@ -27,19 +32,34 @@ public class ChatRoomServer {
 			
 			b.group(bossGroup, workerGroup)
 			.channel(NioServerSocketChannel.class)
-			.childHandler(new ChannelInitializer<SocketChannel>() {
-				@Override
-				public void initChannel(SocketChannel ch){
-					ch.pipeline().addLast(new MessageDecoder());
-					ch.pipeline().addLast(new ChatRoomServerRecvHandler());
-					ch.pipeline().addLast(new ChatRoomServerSendHandler());
-				}
-			})
+			.childHandler(new ChatRoomServerInitializer())
 			.option(ChannelOption.SO_BACKLOG, 128)
 			.childOption(ChannelOption.SO_KEEPALIVE, true);
 			
-			ChannelFuture f = b.bind(port).sync();
-			f.channel().closeFuture().sync();
+			Channel ch = b.bind(port).sync().channel();
+			ChannelFuture f = null;
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			while(true){
+				String line = br.readLine();
+				
+				if(line == null){
+					break;
+				}
+				
+				f = ch.writeAndFlush(line + "\r\n");
+				
+				if("bye".equals(line.toLowerCase())){
+					ch.closeFuture().sync();
+					break;
+				}
+			}
+			
+			if(f != null){
+				f.sync();
+			}
+			
+			
 		} finally{
 			bossGroup.shutdownGracefully();
 			workerGroup.shutdownGracefully();
@@ -49,7 +69,7 @@ public class ChatRoomServer {
 	}
 	
 	
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, IOException {
 		// TODO Auto-generated method stub
 		
 		int port;

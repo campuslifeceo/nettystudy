@@ -9,15 +9,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 public class ChatRoomClientHandler extends ChannelInboundHandlerAdapter{
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg){
-		ByteBuf m = (ByteBuf) msg;
-		
-		try{
-			
-			System.out.println(m.toString());
-			ctx.close();
-		}finally{
-			m.release();
-		}
+		System.out.println("From Server: " + msg );
 	}
 	
 	@Override
