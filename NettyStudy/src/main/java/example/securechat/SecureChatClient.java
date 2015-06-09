@@ -20,7 +20,7 @@ public class SecureChatClient {
 
 	//static final String HOST = System.getProperty("host", "127.0.0.1");
 	static final int PORT = Integer.parseInt(System.getProperty("port", "8023"));
-	public static final String host = "10.58.183.107";
+	public static final String host = System.getProperty("host", "127.0.0.1");
 
 	public void serve() throws InterruptedException, IOException{
 		final SslContext ssl = SslContextBuilder.forClient()
