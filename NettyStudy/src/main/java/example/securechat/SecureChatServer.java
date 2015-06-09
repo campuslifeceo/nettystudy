@@ -20,7 +20,7 @@ public class SecureChatServer {
 	public static void main(String [] args) throws CertificateException, SSLException, InterruptedException{
 		SelfSignedCertificate ssc = new SelfSignedCertificate();
 		
-		SslContext ssl = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey(), "111111").build();
+		SslContext ssl = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
 		
 		EventLoopGroup boss = new NioEventLoopGroup();
 		EventLoopGroup worker = new NioEventLoopGroup();
