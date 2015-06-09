@@ -5,6 +5,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -28,10 +29,13 @@ public class TestPipelineOrderServer {
 			ServerBootstrap b = new ServerBootstrap();
 			b.group(boss, worker)
 			.channel(NioServerSocketChannel.class)
+			.option(ChannelOption.SO_BACKLOG, 100)
 			.childHandler(new ChannelInitializer<SocketChannel>(){
 
 				@Override
 				protected void initChannel(SocketChannel ch) throws Exception {
+					
+					System.out.println("channel init started!");
 					// TODO Auto-generated method stub
 					ChannelPipeline pp = ch.pipeline();
 					pp.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
@@ -41,14 +45,17 @@ public class TestPipelineOrderServer {
 					pp.addLast(new OrderChannelHandler2());
 					pp.addLast(new OrderChannelHandler3());
 					
+					
 				}
 				
 			});
 		
 			ChannelFuture f = b.bind(port).sync();
 			
+			System.out.println("after bind");
 			
 			f.channel().closeFuture().sync();
+			System.out.println("after close");
 		} finally{
 			boss.shutdownGracefully();
 			worker.shutdownGracefully();
