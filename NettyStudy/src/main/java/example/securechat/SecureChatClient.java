@@ -44,7 +44,19 @@ public class SecureChatClient {
 				while(true){
 					String tmp = br.readLine();
 					if(tmp != null){
-						f = ch.writeAndFlush(tmp + "\n\r");
+						if(ch.isActive())
+							f = ch.writeAndFlush(tmp + "\n\r");
+						else{
+							System.out.println("Session is closed! Retry? Type yes or no:");
+							boolean yes = br.readLine().trim().equalsIgnoreCase("yes");
+							if(yes){
+								ch = b.connect(host,PORT).sync().channel();
+								f = null;
+							}else{
+								System.exit(0);
+							}
+						}
+							
 					} else{
 						break;
 					}
@@ -61,7 +73,10 @@ public class SecureChatClient {
 						f.sync();
 					}
 				}
-			}finally{
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+			finally{
 				
 				if(br != null){
 					br.close();
@@ -70,6 +85,7 @@ public class SecureChatClient {
 			}
 			
 		} finally{
+			//System.out.println("finally");
 			group.shutdownGracefully();
 		}
 	}

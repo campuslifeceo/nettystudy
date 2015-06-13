@@ -15,6 +15,7 @@ public class SecureChatClientHandler extends ChannelInboundHandlerAdapter{
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause){
 		cause.printStackTrace();
+		System.out.println(cause.getClass());
 		ctx.close();
 	}
 }
