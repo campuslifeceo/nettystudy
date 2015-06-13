@@ -46,13 +46,13 @@ public class SecureChatServerHandler extends ChannelInboundHandlerAdapter{
 		System.out.println(msg);
 		for(Channel ch : channels){
 			if(ch != ctx.channel()){
-				ch.writeAndFlush("[" +ch.remoteAddress()+"]: " + msg + "\n");
+				ch.writeAndFlush("[" +ch.remoteAddress()+"]: " + msg.toString().trim() + "\n");
 			}else{
-				ch.writeAndFlush("[" +"You"+"]: " + msg + "\n");
+				ch.writeAndFlush("[" +"You"+"]: " + msg.toString().trim() + "\n");
 			}
 		}
 		
-		if("bye".equalsIgnoreCase((String)msg)){
+		if("bye".equalsIgnoreCase(msg.toString().trim())){
 			ctx.close();
 		}
 	}
