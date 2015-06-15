@@ -43,16 +43,16 @@ public class SecureChatServerHandler extends ChannelInboundHandlerAdapter{
 	
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg){
-		System.out.println(msg);
+		System.out.println(msg.toString().trim());
 		for(Channel ch : channels){
 			if(ch != ctx.channel()){
-				ch.writeAndFlush("[" +ch.remoteAddress()+"]: " + msg + "\n\r");
+				ch.writeAndFlush("[" +ch.remoteAddress()+"]: " + msg.toString().trim() + "\n");
 			}else{
-				ch.writeAndFlush("[" +"You"+"]: " + msg + "\n\r");
+				ch.writeAndFlush("[" +"You"+"]: " + msg.toString().trim() + "\n");
 			}
 		}
 		
-		if("bye".equalsIgnoreCase((String)msg)){
+		if("bye".equalsIgnoreCase(msg.toString().trim())){
 			ctx.close();
 		}
 	}
